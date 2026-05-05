@@ -1,0 +1,35 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true,
+    "editor.wordWrap": "on",
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1000,
+    "liveServer.settings.donotShowInfoMsg": true,
+    "liveServer.settings.port": 5500,
+    "html.format.indentInnerHtml": true,
+    "css.validate": true,
+    "javascript.validate.enable": true,
+    "editor.fontFamily": "Fira Code, Consolas, monospace",
+    "editor.fontLigatures": true,
+    "editor.fontSize": 14,
+    "workbench.colorTheme": "Default Dark+",
+    "editor.minimap.enabled": true,
+    "explorer.openEditors.visible": 1
+  },
+  "extensions": {
+    "recommendations": [
+      "ritwickdey.LiveServer",
+      "esbenp.prettier-vscode",
+      "formulahendry.auto-close-tag",
+      "formulahendry.auto-rename-tag",
+      "pranaygp.vscode-css-peek",
+      "ecmel.vscode-html-css"
+    ]
+  }
+}

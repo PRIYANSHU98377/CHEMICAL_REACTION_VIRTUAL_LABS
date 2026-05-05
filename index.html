@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Acid–Base Reaction Simulator | Virtual Lab</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="lab-header">
+    <div class="header-inner">
+      <div class="logo-area">
+        <span class="flask-icon">⚗️</span>
+        <div>
+          <h1>ChemLab Simulator</h1>
+          <p class="subtitle">Acid–Base Reaction Virtual Lab</p>
+        </div>
+      </div>
+      <nav class="header-nav">
+        <button class="nav-btn active" onclick="showSection('lab')">🧪 Lab</button>
+        <button class="nav-btn" onclick="showSection('reactions')">📋 Reaction Table</button>
+        <button class="nav-btn" onclick="showSection('theory')">📖 Theory</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN SECTIONS -->
+  <main>
+
+    <!-- ====== LAB SECTION ====== -->
+    <section id="section-lab" class="section active">
+      <div class="lab-container">
+
+        <!-- LEFT PANEL: ACID -->
+        <div class="chemical-panel acid-panel">
+          <h2 class="panel-title acid-title">🔴 Select an Acid</h2>
+          <div class="chemical-list" id="acid-list">
+            <!-- Filled by JS -->
+          </div>
+          <div class="beaker-wrap">
+            <div class="beaker" id="acid-beaker">
+              <div class="liquid acid-liquid" id="acid-liquid">
+                <span class="liquid-label" id="acid-label">—</span>
+              </div>
+              <div class="beaker-glass"></div>
+              <div class="bubbles" id="acid-bubbles"></div>
+            </div>
+            <p class="beaker-caption acid-caption">Acid Beaker</p>
+          </div>
+        </div>
+
+        <!-- CENTER: REACTION ZONE -->
+        <div class="reaction-zone">
+          <div class="arrow-area">
+            <button class="mix-btn" id="mix-btn" onclick="runReaction()">
+              <span class="mix-text">MIX</span>
+              <span class="mix-sub">React!</span>
+            </button>
+          </div>
+
+          <div class="reaction-beaker-wrap">
+            <div class="reaction-beaker" id="reaction-beaker">
+              <div class="reaction-liquid" id="reaction-liquid">
+                <div class="reaction-bubbles" id="reaction-bubbles"></div>
+              </div>
+              <div class="reaction-glass"></div>
+            </div>
+            <p class="beaker-caption">Reaction Flask</p>
+          </div>
+
+          <!-- RESULT CARD -->
+          <div class="result-card" id="result-card">
+            <div class="result-placeholder">
+              <span>🔬</span>
+              <p>Select an acid and a base, then press <strong>MIX</strong> to see the reaction!</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT PANEL: BASE -->
+        <div class="chemical-panel base-panel">
+          <h2 class="panel-title base-title">🔵 Select a Base</h2>
+          <div class="chemical-list" id="base-list">
+            <!-- Filled by JS -->
+          </div>
+          <div class="beaker-wrap">
+            <div class="beaker" id="base-beaker">
+              <div class="liquid base-liquid" id="base-liquid">
+                <span class="liquid-label" id="base-label">—</span>
+              </div>
+              <div class="beaker-glass"></div>
+              <div class="bubbles" id="base-bubbles"></div>
+            </div>
+            <p class="beaker-caption base-caption">Base Beaker</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- PH METER BAR -->
+      <div class="ph-section">
+        <div class="ph-meter">
+          <div class="ph-bar">
+            <div class="ph-gradient"></div>
+            <div class="ph-labels">
+              <span>0</span><span>2</span><span>4</span><span>6</span>
+              <span class="neutral-mark">7</span>
+              <span>8</span><span>10</span><span>12</span><span>14</span>
+            </div>
+            <div class="ph-indicator" id="ph-indicator"></div>
+          </div>
+          <div class="ph-value-box">
+            <span class="ph-label">pH</span>
+            <span class="ph-value" id="ph-value">—</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== REACTION TABLE SECTION ====== -->
+    <section id="section-reactions" class="section">
+      <div class="table-container">
+        <h2 class="section-heading">📋 Complete Reaction Reference Table</h2>
+        <div class="table-scroll">
+          <table class="reaction-table" id="reaction-table">
+            <thead>
+              <tr>
+                <th>Acid</th>
+                <th>Base</th>
+                <th>Products</th>
+                <th>Reaction Equation</th>
+                <th>Type</th>
+                <th>pH</th>
+              </tr>
+            </thead>
+            <tbody id="reaction-table-body">
+              <!-- Filled by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== THEORY SECTION ====== -->
+    <section id="section-theory" class="section">
+      <div class="theory-container">
+        <h2 class="section-heading">📖 Acid–Base Theory</h2>
+        <div class="theory-grid">
+          <div class="theory-card">
+            <div class="theory-icon">🔴</div>
+            <h3>What is an Acid?</h3>
+            <p>An acid is a substance that donates hydrogen ions (H⁺) in solution. Acids have a pH less than 7, taste sour, and turn blue litmus paper red. Common examples include HCl (Hydrochloric acid), H₂SO₄ (Sulfuric acid), and CH₃COOH (Acetic acid).</p>
+          </div>
+          <div class="theory-card">
+            <div class="theory-icon">🔵</div>
+            <h3>What is a Base?</h3>
+            <p>A base is a substance that accepts hydrogen ions (H⁺) or donates hydroxide ions (OH⁻). Bases have a pH greater than 7, taste bitter, and turn red litmus paper blue. Common examples include NaOH (Sodium hydroxide) and NH₃ (Ammonia).</p>
+          </div>
+          <div class="theory-card">
+            <div class="theory-icon">⚗️</div>
+            <h3>Neutralization Reaction</h3>
+            <p>When an acid reacts with a base, a neutralization reaction occurs. The products are typically a salt and water. The general equation is:</p>
+            <div class="equation-box">Acid + Base → Salt + Water</div>
+            <p>The pH of the final solution depends on the relative strengths of the acid and base.</p>
+          </div>
+          <div class="theory-card">
+            <div class="theory-icon">🌡️</div>
+            <h3>pH Scale</h3>
+            <p>pH measures how acidic or basic a solution is, ranging from 0–14. pH 7 is neutral (pure water). Below 7 is acidic; above 7 is basic/alkaline. Each unit change represents a 10× change in H⁺ concentration.</p>
+            <div class="ph-scale-mini">
+              <div class="ph-mini-bar"></div>
+              <div class="ph-mini-labels">
+                <span>Acidic (0–6)</span>
+                <span>Neutral (7)</span>
+                <span>Basic (8–14)</span>
+              </div>
+            </div>
+          </div>
+          <div class="theory-card">
+            <div class="theory-icon">💡</div>
+            <h3>Arrhenius Theory</h3>
+            <p>Proposed by Svante Arrhenius (1884). An acid produces H⁺ ions in water; a base produces OH⁻ ions. This is the simplest theory but only applies to aqueous solutions.</p>
+          </div>
+          <div class="theory-card">
+            <div class="theory-icon">🔬</div>
+            <h3>Brønsted–Lowry Theory</h3>
+            <p>A more general theory: an acid is a proton (H⁺) donor; a base is a proton acceptor. This explains acid-base reactions in non-aqueous solvents and includes substances like ammonia (NH₃) as a base.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="lab-footer">
+    <p>⚗️ ChemLab Simulator · Virtual Labs Internship Project · For Educational Use Only</p>
+  </footer>
+
+  <script src="reactions.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,834 @@
+/* =============================================
+   style.css — Acid-Base Reaction Simulator
+   Virtual Labs Chemistry Simulation
+   ============================================= */
+
+/* ── CSS VARIABLES ───────────────────────── */
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1f2733;
+  --border: #30363d;
+  --border-light: #3d4a5c;
+  --text: #e6edf3;
+  --text-dim: #8b949e;
+  --text-muted: #6e7681;
+  --acid-color: #ff6b6b;
+  --acid-glow: rgba(255,107,107,0.3);
+  --base-color: #74b9ff;
+  --base-glow: rgba(116,185,255,0.3);
+  --accent: #58a6ff;
+  --green: #3fb950;
+  --yellow: #e3b341;
+  --purple: #bc8cff;
+  --radius: 12px;
+  --radius-lg: 18px;
+  --font-display: 'Orbitron', monospace;
+  --font-mono: 'Space Mono', monospace;
+}
+
+/* ── RESET & BASE ────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-mono);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-image:
+    radial-gradient(ellipse at 20% 20%, rgba(88,166,255,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 80%, rgba(255,107,107,0.04) 0%, transparent 60%);
+}
+
+/* ── HEADER ──────────────────────────────── */
+.lab-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+.header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.flask-icon { font-size: 2.2rem; }
+
+.logo-area h1 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+}
+
+.subtitle {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.header-nav { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.nav-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 7px 16px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.03em;
+}
+
+.nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+.nav-btn.active {
+  background: rgba(88,166,255,0.12);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── MAIN & SECTIONS ─────────────────────── */
+main { flex: 1; padding: 0 0 40px; }
+
+.section { display: none; }
+.section.active { display: block; }
+
+/* ── LAB LAYOUT ──────────────────────────── */
+.lab-container {
+  max-width: 1400px;
+  margin: 28px auto 0;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 280px 1fr 280px;
+  gap: 24px;
+  align-items: start;
+}
+
+/* ── CHEMICAL PANELS ─────────────────────── */
+.chemical-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.acid-panel { border-color: rgba(255,107,107,0.3); }
+.base-panel { border-color: rgba(116,185,255,0.3); }
+
+.panel-title {
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.acid-title { color: var(--acid-color); }
+.base-title { color: var(--base-color); }
+
+/* Chemical Card List */
+.chemical-list { display: flex; flex-direction: column; gap: 8px; }
+
+.chem-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.chem-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: transparent;
+  transition: background 0.2s;
+}
+
+.acid-panel .chem-card:hover,
+.acid-panel .chem-card.selected { border-color: var(--acid-color); }
+.acid-panel .chem-card:hover::before,
+.acid-panel .chem-card.selected::before { background: var(--acid-color); }
+
+.base-panel .chem-card:hover,
+.base-panel .chem-card.selected { border-color: var(--base-color); }
+.base-panel .chem-card:hover::before,
+.base-panel .chem-card.selected::before { background: var(--base-color); }
+
+.acid-panel .chem-card.selected { background: rgba(255,107,107,0.08); }
+.base-panel .chem-card.selected { background: rgba(116,185,255,0.08); }
+
+.chem-formula {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.chem-name {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.chem-strength {
+  font-size: 0.62rem;
+  padding: 2px 8px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-top: 5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.strength-strong { background: rgba(255,82,82,0.2); color: #ff6b6b; }
+.strength-moderate { background: rgba(255,200,0,0.2); color: #ffc107; }
+.strength-weak { background: rgba(63,185,80,0.2); color: #3fb950; }
+
+/* ── BEAKER (in panels) ──────────────────── */
+.beaker-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.beaker {
+  width: 90px;
+  height: 110px;
+  position: relative;
+}
+
+.beaker-glass {
+  position: absolute;
+  inset: 0;
+  border: 2px solid rgba(150,200,255,0.4);
+  border-top: none;
+  border-radius: 0 0 16px 16px;
+  background: rgba(100,160,200,0.04);
+}
+
+.beaker-glass::before {
+  content: '';
+  position: absolute;
+  top: -12px; left: -2px; right: -2px;
+  height: 12px;
+  border: 2px solid rgba(150,200,255,0.4);
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+}
+
+.liquid {
+  position: absolute;
+  bottom: 2px; left: 2px; right: 2px;
+  height: 0%;
+  border-radius: 0 0 14px 14px;
+  transition: height 0.6s ease, background 0.4s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.liquid-label {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  color: rgba(255,255,255,0.8);
+  font-weight: 700;
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 4px;
+}
+
+.beaker-caption {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.acid-caption { color: rgba(255,107,107,0.7); }
+.base-caption { color: rgba(116,185,255,0.7); }
+
+/* ── REACTION ZONE (CENTER) ──────────────── */
+.reaction-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 0;
+}
+
+/* MIX BUTTON */
+.mix-btn {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  background: rgba(88,166,255,0.08);
+  color: var(--accent);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s;
+  box-shadow: 0 0 20px rgba(88,166,255,0.15);
+  position: relative;
+}
+
+.mix-btn:hover {
+  background: rgba(88,166,255,0.18);
+  box-shadow: 0 0 35px rgba(88,166,255,0.35);
+  transform: scale(1.07);
+}
+
+.mix-btn.mixing {
+  animation: mixPulse 0.5s ease 2;
+}
+
+@keyframes mixPulse {
+  0% { transform: scale(1); box-shadow: 0 0 20px rgba(88,166,255,0.15); }
+  50% { transform: scale(1.15); box-shadow: 0 0 50px rgba(88,166,255,0.6); }
+  100% { transform: scale(1); }
+}
+
+.mix-text {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+}
+.mix-sub { font-size: 0.62rem; color: var(--text-dim); letter-spacing: 0.05em; }
+
+/* REACTION BEAKER */
+.reaction-beaker-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.reaction-beaker {
+  width: 120px;
+  height: 150px;
+  position: relative;
+}
+
+.reaction-glass {
+  position: absolute;
+  inset: 0;
+  border: 2.5px solid rgba(150,200,255,0.45);
+  border-top: none;
+  border-radius: 0 0 20px 20px;
+  background: rgba(100,160,200,0.03);
+}
+
+.reaction-glass::before {
+  content: '';
+  position: absolute;
+  top: -14px; left: -2px; right: -2px;
+  height: 14px;
+  border: 2.5px solid rgba(150,200,255,0.45);
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+}
+
+.reaction-liquid {
+  position: absolute;
+  bottom: 2px; left: 2px; right: 2px;
+  height: 0%;
+  border-radius: 0 0 18px 18px;
+  transition: height 0.7s ease, background 0.5s ease;
+  overflow: hidden;
+}
+
+/* Bubbles */
+.bubble, .reaction-bubbles .bubble {
+  position: absolute;
+  bottom: 0;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.35);
+  animation: rise linear infinite;
+}
+
+@keyframes rise {
+  0% { transform: translateY(0) scale(1); opacity: 0.8; }
+  100% { transform: translateY(-200px) scale(0.3); opacity: 0; }
+}
+
+/* ── RESULT CARD ─────────────────────────── */
+.result-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  width: 100%;
+  max-width: 640px;
+  transition: all 0.3s ease;
+  animation: fadeInCard 0.4s ease;
+}
+
+@keyframes fadeInCard {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.result-card.result-active { border-color: rgba(88,166,255,0.4); }
+.result-card.ph-acid { border-color: rgba(255,107,107,0.5); }
+.result-card.ph-base { border-color: rgba(116,185,255,0.5); }
+.result-card.ph-neutral { border-color: rgba(63,185,80,0.5); }
+
+.result-placeholder {
+  text-align: center;
+  padding: 30px 20px;
+  color: var(--text-muted);
+}
+
+.result-placeholder span { font-size: 2.5rem; display: block; margin-bottom: 12px; }
+
+.result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.result-title {
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  color: var(--accent);
+}
+
+.type-badge {
+  background: rgba(88,166,255,0.12);
+  border: 1px solid rgba(88,166,255,0.3);
+  color: var(--accent);
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+}
+
+.equation-display {
+  background: var(--surface2);
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.eq-balanced {
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  color: var(--yellow);
+  letter-spacing: 0.04em;
+  word-break: break-word;
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.result-item {
+  background: var(--surface2);
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.ri-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
+.ri-label { font-size: 0.62rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.ri-value { font-size: 0.78rem; color: var(--text); margin-top: 2px; font-weight: 700; }
+.ph-highlight { color: var(--green); }
+
+/* Tags */
+.info-tag {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 0.72rem;
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+.tag-gas { background: rgba(188,140,255,0.15); color: var(--purple); border: 1px solid rgba(188,140,255,0.3); }
+.tag-precip { background: rgba(255,200,0,0.12); color: var(--yellow); border: 1px solid rgba(255,200,0,0.3); }
+
+/* Observation */
+.observation-box {
+  background: rgba(88,166,255,0.06);
+  border: 1px solid rgba(88,166,255,0.2);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+}
+
+.observation-box h4, .realworld-box h4 {
+  font-size: 0.72rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+
+.observation-box p, .realworld-box p {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+/* Indicators */
+.indicator-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.indicator-item {
+  background: var(--surface2);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.72rem;
+}
+
+.ind-name { color: var(--text-muted); }
+.ind-result { color: var(--text); margin-left: 6px; font-weight: 700; }
+
+/* Real-World */
+.realworld-box {
+  background: rgba(63,185,80,0.06);
+  border: 1px solid rgba(63,185,80,0.2);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+/* Error */
+.error-msg {
+  text-align: center;
+  padding: 20px;
+  color: var(--acid-color);
+}
+.error-msg span { font-size: 2rem; display: block; margin-bottom: 10px; }
+.error-msg p { font-size: 0.82rem; }
+
+.shake { animation: shake 0.4s ease; }
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+/* ── PH METER SECTION ────────────────────── */
+.ph-section {
+  max-width: 1400px;
+  margin: 24px auto 0;
+  padding: 0 20px;
+}
+
+.ph-meter {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.ph-bar {
+  flex: 1;
+  position: relative;
+  height: 28px;
+}
+
+.ph-gradient {
+  width: 100%;
+  height: 16px;
+  border-radius: 8px;
+  background: linear-gradient(to right,
+    #d32f2f 0%, #f44336 7%, #ff5722 14%,
+    #ff9800 21%, #ffc107 29%, #ffeb3b 36%,
+    #cddc39 43%, #8bc34a 50%,
+    #4caf50 57%, #009688 64%,
+    #00bcd4 71%, #2196f3 79%,
+    #3f51b5 86%, #673ab7 93%, #9c27b0 100%
+  );
+  margin-top: 6px;
+}
+
+.ph-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.ph-labels span {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.neutral-mark { color: var(--green) !important; font-weight: 700; }
+
+.ph-indicator {
+  position: absolute;
+  top: 0;
+  left: -20px;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  transform: translateX(-50%);
+  transition: left 1s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+.ph-value-box {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 80px;
+}
+
+.ph-label {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+
+.ph-value {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--green);
+  transition: color 0.5s;
+}
+
+/* ── REACTION TABLE SECTION ──────────────── */
+.table-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 28px 20px;
+}
+
+.section-heading {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--accent);
+  margin-bottom: 20px;
+  letter-spacing: 0.06em;
+}
+
+.table-scroll { overflow-x: auto; }
+
+.reaction-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+  min-width: 700px;
+}
+
+.reaction-table th {
+  background: var(--surface2);
+  color: var(--text-dim);
+  padding: 12px 14px;
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--border-light);
+}
+
+.reaction-table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-dim);
+  vertical-align: middle;
+  transition: background 0.2s;
+}
+
+.reaction-table td strong { color: var(--text); font-size: 0.85rem; }
+.reaction-table td small { font-size: 0.65rem; color: var(--text-muted); }
+
+.reaction-table tr:hover td { background: rgba(88,166,255,0.05); }
+
+.eq-cell {
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  color: var(--yellow) !important;
+}
+
+.type-tag {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 0.65rem;
+  white-space: nowrap;
+}
+
+.ph-tag {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 6px;
+}
+
+.ph-tag.ph-very-acid { color: #f44336; background: rgba(244,67,54,0.12); }
+.ph-tag.ph-acid { color: #ff9800; background: rgba(255,152,0,0.12); }
+.ph-tag.ph-neutral { color: var(--green); background: rgba(63,185,80,0.12); }
+.ph-tag.ph-base { color: #64b5f6; background: rgba(100,181,246,0.12); }
+.ph-tag.ph-strong-base { color: var(--purple); background: rgba(188,140,255,0.12); }
+
+/* ── THEORY SECTION ──────────────────────── */
+.theory-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 28px 20px;
+}
+
+.theory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.theory-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.theory-card:hover {
+  border-color: var(--border-light);
+  transform: translateY(-2px);
+}
+
+.theory-icon { font-size: 2rem; margin-bottom: 12px; }
+
+.theory-card h3 {
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  color: var(--accent);
+  margin-bottom: 10px;
+  letter-spacing: 0.05em;
+}
+
+.theory-card p {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+
+.equation-box {
+  background: var(--surface2);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 8px 14px;
+  margin: 10px 0;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  color: var(--yellow);
+}
+
+/* pH Scale Mini (in theory) */
+.ph-scale-mini { margin-top: 12px; }
+.ph-mini-bar {
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(to right, #d32f2f, #ff9800, #cddc39, #8bc34a, #2196f3, #673ab7);
+  margin-bottom: 4px;
+}
+.ph-mini-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.62rem;
+  color: var(--text-muted);
+}
+
+/* ── FOOTER ──────────────────────────────── */
+.lab-footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 14px 24px;
+  text-align: center;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+/* ── RESPONSIVE ──────────────────────────── */
+@media (max-width: 960px) {
+  .lab-container {
+    grid-template-columns: 1fr;
+    max-width: 600px;
+  }
+  .chemical-panel {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .panel-title { width: 100%; }
+  .chemical-list { flex-direction: row; flex-wrap: wrap; flex: 1; }
+  .chem-card { flex: 1 1 130px; }
+  .beaker-wrap { flex-direction: row; gap: 12px; align-items: center; }
+  .beaker-wrap .beaker { width: 70px; height: 85px; }
+  .reaction-zone { max-width: 100%; width: 100%; }
+  .result-card { max-width: 100%; }
+}
+
+@media (max-width: 600px) {
+  .header-inner { padding: 10px 16px; }
+  .logo-area h1 { font-size: 0.95rem; }
+  .result-grid { grid-template-columns: 1fr; }
+  .lab-container { padding: 0 12px; }
+}
