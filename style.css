@@ -293,6 +293,11 @@ main { flex: 1; padding: 0 0 40px; }
   padding: 20px 0;
 }
 
+.lab-container.is-pouring .chem-card {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
 /* MIX BUTTON */
 .mix-btn {
   width: 100px;
@@ -321,6 +326,8 @@ main { flex: 1; padding: 0 0 40px; }
   animation: mixPulse 0.5s ease 2;
 }
 
+.mix-btn:disabled { cursor: wait; }
+
 @keyframes mixPulse {
   0% { transform: scale(1); box-shadow: 0 0 20px rgba(88,166,255,0.15); }
   50% { transform: scale(1.15); box-shadow: 0 0 50px rgba(88,166,255,0.6); }
@@ -341,6 +348,106 @@ main { flex: 1; padding: 0 0 40px; }
   flex-direction: column;
   align-items: center;
   gap: 8px;
+  position: relative;
+}
+
+.pouring-hand {
+  position: absolute;
+  z-index: 2;
+  top: -94px;
+  left: 50%;
+  width: 220px;
+  height: 110px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.pouring-hand-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.hand-sleeve { fill: #416b9b; }
+.hand-cuff { fill: #75b8f4; }
+.hand-skin { fill: #e8ad83; }
+.hand-outline {
+  fill: none;
+  stroke: #bd7956;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.cup-glass {
+  fill: rgba(190, 225, 245, 0.32);
+  stroke: #c8e7f5;
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+.cup-rim {
+  fill: none;
+  stroke: #e5f5ff;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.cup-liquid { fill: var(--pour-color, #ff6b6b); opacity: 0.9; }
+.pour-stream {
+  fill: none;
+  stroke: var(--pour-color, #ff6b6b);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 7 7;
+  stroke-dashoffset: 28;
+  opacity: 0;
+}
+
+.reaction-zone.pouring-acid .pouring-hand,
+.reaction-zone.pouring-base .pouring-hand {
+  opacity: 1;
+}
+
+.reaction-zone.pouring-acid .pouring-hand-art {
+  animation: pourFromLeft 1.25s ease-in-out both;
+}
+
+.reaction-zone.pouring-base .pouring-hand-art {
+  animation: pourFromRight 1.25s ease-in-out both;
+}
+
+.reaction-zone.pouring-acid .pour-stream,
+.reaction-zone.pouring-base .pour-stream {
+  animation: liquidStream 0.7s ease-in 0.35s both;
+}
+
+@keyframes pourFromLeft {
+  0% { transform: translate(-125px, 18px) rotate(-12deg); }
+  25% { transform: translate(0, 0) rotate(-12deg); }
+  45%, 78% { transform: translate(0, 0) rotate(0); }
+  100% { transform: translate(-125px, 18px) rotate(-12deg); }
+}
+
+@keyframes pourFromRight {
+  0% { transform: translate(125px, 18px) scaleX(-1) rotate(-12deg); }
+  25% { transform: translate(0, 0) scaleX(-1) rotate(-12deg); }
+  45%, 78% { transform: translate(0, 0) scaleX(-1) rotate(0); }
+  100% { transform: translate(125px, 18px) scaleX(-1) rotate(-12deg); }
+}
+
+@keyframes liquidStream {
+  0% { stroke-dashoffset: 28; opacity: 0; }
+  20% { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
+
+.pouring-status {
+  min-height: 2.6em;
+  max-width: 290px;
+  color: var(--text-dim);
+  font-size: 0.68rem;
+  line-height: 1.5;
+  text-align: center;
 }
 
 .reaction-beaker {
@@ -831,4 +938,14 @@ main { flex: 1; padding: 0 0 40px; }
   .logo-area h1 { font-size: 0.95rem; }
   .result-grid { grid-template-columns: 1fr; }
   .lab-container { padding: 0 12px; }
+  .pouring-hand { top: -88px; transform: translateX(-50%) scale(0.82); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reaction-zone.pouring-acid .pouring-hand-art,
+  .reaction-zone.pouring-base .pouring-hand-art,
+  .reaction-zone.pouring-acid .pour-stream,
+  .reaction-zone.pouring-base .pour-stream {
+    animation-duration: 0.01ms;
+  }
 }

@@ -10,6 +10,7 @@
 // ──────────────────────────────────────────
 let selectedAcid = null;
 let selectedBase = null;
+let isReactionRunning = false;
 
 // ──────────────────────────────────────────
 //  INIT
@@ -59,6 +60,8 @@ function renderChemicalList(containerId, chemicals, type) {
 //  CHEMICAL SELECTION HANDLER
 // ──────────────────────────────────────────
 function selectChemical(type, chem, card, containerId) {
+  if (isReactionRunning) return;
+
   // Deselect others
   document.querySelectorAll(`#${containerId} .chem-card`).forEach(c => c.classList.remove("selected"));
   card.classList.add("selected");
@@ -73,6 +76,7 @@ function selectChemical(type, chem, card, containerId) {
 
   // Reset reaction area if selection changes
   resetReactionArea();
+  updatePouringPrompt();
 }
 
 // ──────────────────────────────────────────
@@ -95,6 +99,10 @@ function updateBeaker(type, chem) {
 //  RESET REACTION AREA
 // ──────────────────────────────────────────
 function resetReactionArea() {
+  const reactionZone = document.querySelector(".reaction-zone");
+  reactionZone.classList.remove("pouring-acid", "pouring-base");
+  reactionZone.style.removeProperty("--pour-color");
+
   const card = document.getElementById("result-card");
   card.innerHTML = `
     <div class="result-placeholder">
@@ -112,10 +120,25 @@ function resetReactionArea() {
   document.getElementById("ph-indicator").style.left = "-20px";
 }
 
+function updatePouringPrompt() {
+  const status = document.getElementById("pouring-status");
+  if (selectedAcid && selectedBase) {
+    status.textContent = `Ready: ${selectedAcid.formula} + ${selectedBase.formula}. Press MIX to watch the hand pour them into the flask.`;
+  } else if (selectedAcid) {
+    status.textContent = `Acid selected: ${selectedAcid.formula}. Now choose a base to continue.`;
+  } else if (selectedBase) {
+    status.textContent = `Base selected: ${selectedBase.formula}. Now choose an acid to continue.`;
+  } else {
+    status.textContent = "Choose an acid and a base, then press MIX to pour them into the flask.";
+  }
+}
+
 // ──────────────────────────────────────────
 //  RUN REACTION
 // ──────────────────────────────────────────
 function runReaction() {
+  if (isReactionRunning) return;
+
   if (!selectedAcid || !selectedBase) {
     showError(!selectedAcid ? "Please select an Acid first! 🔴" : "Please select a Base first! 🔵");
     return;
@@ -129,19 +152,43 @@ function runReaction() {
     return;
   }
 
-  // Button animation
+  isReactionRunning = true;
   const btn = document.getElementById("mix-btn");
+  const reactionZone = document.querySelector(".reaction-zone");
+  const labContainer = document.querySelector(".lab-container");
+  const status = document.getElementById("pouring-status");
+
+  btn.disabled = true;
   btn.classList.add("mixing");
   setTimeout(() => btn.classList.remove("mixing"), 1000);
+  labContainer.classList.add("is-pouring");
+  reactionZone.classList.remove("pouring-acid", "pouring-base");
+  reactionZone.classList.add("pouring-acid");
+  reactionZone.style.setProperty("--pour-color", selectedAcid.liquidColor);
+  status.textContent = `Virtual hand is pouring ${selectedAcid.name} (${selectedAcid.formula}) into the reaction flask.`;
 
-  // Animate reaction beaker
-  animateReaction(reaction);
+  setTimeout(() => {
+    reactionZone.classList.remove("pouring-acid");
+    reactionZone.classList.add("pouring-base");
+    reactionZone.style.setProperty("--pour-color", selectedBase.liquidColor);
+    status.textContent = `Now pouring ${selectedBase.name} (${selectedBase.formula}) into the flask.`;
+  }, 1250);
 
-  // Display result after short delay
+  setTimeout(() => {
+    reactionZone.classList.remove("pouring-base");
+    status.textContent = "The acid and base are mixing. Watch the flask and pH meter.";
+    animateReaction(reaction);
+  }, 2500);
+
   setTimeout(() => {
     displayResult(reaction);
     updatePHMeter(reaction.pH, reaction.phType);
-  }, 800);
+    status.textContent = `Reaction complete: ${reaction.salt} and water formed. Final pH: ${reaction.pH} (${reaction.phType}).`;
+    btn.disabled = false;
+    labContainer.classList.remove("is-pouring");
+    reactionZone.style.removeProperty("--pour-color");
+    isReactionRunning = false;
+  }, 3300);
 }
 
 // ──────────────────────────────────────────

@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Acid–Base Reaction Simulator | Virtual Lab</title>
+  <title>Acid-Base Reaction Simulation |VLABS </title>
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 </head>
+
 <body>
 
   <!-- HEADER -->
@@ -15,7 +16,7 @@
       <div class="logo-area">
         <span class="flask-icon">⚗️</span>
         <div>
-          <h1>ChemLab Simulator</h1>
+          <h1>Virtual Labs </h1>
           <p class="subtitle">Acid–Base Reaction Virtual Lab</p>
         </div>
       </div>
@@ -62,6 +63,20 @@
           </div>
 
           <div class="reaction-beaker-wrap">
+            <div class="pouring-hand" aria-hidden="true">
+              <svg class="pouring-hand-art" viewBox="0 0 220 110" role="img">
+                <path class="hand-sleeve" d="M0 54h66c13 0 20-7 28-15l8-8 16 18-17 19c-9 10-20 15-35 15H0z"/>
+                <path class="hand-skin" d="M77 47l15-17c4-5 10-6 14-2 3 3 3 7 1 11l7-8c4-4 10-4 13 0 3 3 3 7 0 11l5-4c4-3 9-2 12 2 2 3 1 7-2 10l-6 7c4-2 9 0 11 4 2 4 0 8-4 11l-14 11c-9 7-21 8-31 2L77 71z"/>
+                <path class="hand-outline" d="M77 47l15-17c4-5 10-6 14-2 3 3 3 7 1 11l7-8c4-4 10-4 13 0 3 3 3 7 0 11l5-4c4-3 9-2 12 2 2 3 1 7-2 10l-6 7c4-2 9 0 11 4 2 4 0 8-4 11l-14 11c-9 7-21 8-31 2L77 71"/>
+                <g class="pouring-cup">
+                  <path class="cup-liquid" d="M94 20h38l-5 37h-29z"/>
+                  <path class="cup-glass" d="M92 17h42l-6 43H98z"/>
+                  <path class="cup-rim" d="M90 17h46"/>
+                </g>
+                <path class="pour-stream" d="M113 61c-2 11 3 15 0 24s2 10 0 17"/>
+                <path class="hand-cuff" d="M0 51h25v35H0z"/>
+              </svg>
+            </div>
             <div class="reaction-beaker" id="reaction-beaker">
               <div class="reaction-liquid" id="reaction-liquid">
                 <div class="reaction-bubbles" id="reaction-bubbles"></div>
@@ -69,6 +84,7 @@
               <div class="reaction-glass"></div>
             </div>
             <p class="beaker-caption">Reaction Flask</p>
+            <p class="pouring-status" id="pouring-status" aria-live="polite">Choose an acid and a base, then press MIX to pour them into the flask.</p>
           </div>
 
           <!-- RESULT CARD -->
